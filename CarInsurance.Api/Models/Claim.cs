@@ -2,7 +2,6 @@
 {
     public class Claim
     { 
-
         public Claim(long policyId, DateOnly claimDate, string description, decimal amount)
         {
             PolicyId = policyId;
