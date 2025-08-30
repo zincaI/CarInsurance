@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace CarInsurance.Api.Models;
 
 public class Car

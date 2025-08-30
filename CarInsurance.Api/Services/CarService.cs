@@ -1,13 +1,16 @@
 using CarInsurance.Api.Data;
 using CarInsurance.Api.Dtos;
 using CarInsurance.Api.Models;
+using CarInsurance.Api.Validators;
 using Microsoft.EntityFrameworkCore;
 
 namespace CarInsurance.Api.Services;
 
-public class CarService(AppDbContext db)
+public class CarService(AppDbContext db, ICarExistsValidator carExistsValidator)
 {
     private readonly AppDbContext _db = db;
+    private readonly ICarExistsValidator _carExistsValidator= carExistsValidator;
+
 
     public async Task<List<CarDto>> ListCarsAsync()
     {
@@ -19,8 +22,8 @@ public class CarService(AppDbContext db)
 
     public async Task<bool> IsInsuranceValidAsync(long carId, DateOnly date)
     {
-        var carExists = await _db.Cars.AnyAsync(c => c.Id == carId);
-        if (!carExists) throw new KeyNotFoundException($"Car {carId} not found");
+        if (!await _carExistsValidator.IsValid(carId)) 
+            throw new KeyNotFoundException($"Car {carId} not found");
 
         return await _db.Policies.AnyAsync(p =>
             p.CarId == carId &&
@@ -31,8 +34,7 @@ public class CarService(AppDbContext db)
 
     public async Task<List<TimelineEventDto>> GetCarHistoryAsync(long carId)
     {
-        var car = await _db.Cars.FindAsync(carId);
-        if (car == null)
+        if (!await _carExistsValidator.IsValid(carId))
         {
             throw new KeyNotFoundException("Car not found.");
         }
@@ -63,8 +65,7 @@ public class CarService(AppDbContext db)
     }
     public async Task<bool> RegisterClaimAsync(long carId, DateOnly claimDate, string description, decimal amount)
     {
-        var car = await _db.Cars.FindAsync(carId);
-        if (car == null)
+        if (!await _carExistsValidator.IsValid(carId))
         {
             throw new KeyNotFoundException("Car not found.");
         }
