@@ -1,8 +1,6 @@
 using CarInsurance.Api.Dtos;
-using CarInsurance.Api.Models;
 using CarInsurance.Api.Services;
 using Microsoft.AspNetCore.Mvc;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace CarInsurance.Api.Controllers;
 
@@ -30,6 +28,24 @@ public class CarsController(CarService service) : ControllerBase
         catch (KeyNotFoundException)
         {
             return NotFound();
+        }
+    }
+
+    [HttpGet("/api/cars/{carId:long}/history")]
+    public async Task<ActionResult<List<TimelineEventDto>>> GetCarHistory(long carId)
+    {
+        try
+        {
+            var history = await _service.GetCarHistoryAsync(carId);
+            return Ok(history);
+        }
+        catch (KeyNotFoundException)
+        {
+            return NotFound();
+        }
+        catch (Exception)
+        {
+            return StatusCode(500, "An internal server error occurred.");
         }
     }
 

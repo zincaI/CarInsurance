@@ -29,6 +29,38 @@ public class CarService(AppDbContext db)
         );
     }
 
+    public async Task<List<TimelineEventDto>> GetCarHistoryAsync(long carId)
+    {
+        var car = await _db.Cars.FindAsync(carId);
+        if (car == null)
+        {
+            throw new KeyNotFoundException("Car not found.");
+        }
+
+        var policies = await _db.Policies
+            .Where(p => p.CarId == carId)
+            .ToListAsync();
+
+        var claims = await _db.Claims
+            .Where(c => policies.Select(p => p.Id).Contains(c.PolicyId))
+            .ToListAsync();
+
+        var timelineEvents = new List<TimelineEventDto>();
+
+        timelineEvents.AddRange(policies.Select(p => new TimelineEventDto(
+            "Policy",
+            p.StartDate,
+            $"Policy provided by {p.Provider}, lasting from {p.StartDate.ToShortDateString()} to {p.EndDate.ToShortDateString()}"
+             )));
+
+        timelineEvents.AddRange(claims.Select(c => new TimelineEventDto(
+            "Claim",
+            c.ClaimDate,
+            $"Claim took for {c.Description} amounting to: {c.Amount}"
+        )));
+
+        return timelineEvents.OrderBy(e => e.Date).ToList();
+    }
     public async Task<bool> RegisterClaimAsync(long carId, DateOnly claimDate, string description, decimal amount)
     {
         var car = await _db.Cars.FindAsync(carId);
@@ -48,7 +80,7 @@ public class CarService(AppDbContext db)
             throw new InvalidOperationException("No valid insurance policy found for the specified claim date.");
         }
 
-        var newClaim = new Claim(validPolicy.Id, claimDate, description,amount);
+        var newClaim = new Claim(validPolicy.Id, claimDate, description, amount);
 
         _db.Claims.Add(newClaim);
         await _db.SaveChangesAsync();
@@ -56,4 +88,5 @@ public class CarService(AppDbContext db)
         return true;
 
     }
+
 }
