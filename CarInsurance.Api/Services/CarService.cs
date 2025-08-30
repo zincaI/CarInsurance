@@ -1,5 +1,6 @@
 using CarInsurance.Api.Data;
 using CarInsurance.Api.Dtos;
+using CarInsurance.Api.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace CarInsurance.Api.Services;
@@ -26,5 +27,33 @@ public class CarService(AppDbContext db)
             p.StartDate <= date &&
             (p.EndDate == null || p.EndDate >= date)
         );
+    }
+
+    public async Task<bool> RegisterClaimAsync(long carId, DateOnly claimDate, string description, decimal amount)
+    {
+        var car = await _db.Cars.FindAsync(carId);
+        if (car == null)
+        {
+            throw new KeyNotFoundException("Car not found.");
+        }
+
+        var validPolicy = await _db.Policies
+            .Where(p => p.CarId == carId &&
+                        p.StartDate <= claimDate &&
+                        p.EndDate >= claimDate)
+            .FirstOrDefaultAsync();
+
+        if (validPolicy == null)
+        {
+            throw new InvalidOperationException("No valid insurance policy found for the specified claim date.");
+        }
+
+        var newClaim = new Claim(validPolicy.Id, claimDate, description,amount);
+
+        _db.Claims.Add(newClaim);
+        await _db.SaveChangesAsync();
+
+        return true;
+
     }
 }
