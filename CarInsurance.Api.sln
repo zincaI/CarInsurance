@@ -1,0 +1,36 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36408.4
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{95E17EBD-FBDA-470A-8F87-ACB7DDB4CE26}"
+	ProjectSection(SolutionItems) = preProject
+		MyTestSettings.runsettings = MyTestSettings.runsettings
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CarInsurance.Api", "CarInsurance.Api\CarInsurance.Api.csproj", "{B4B72544-BC3B-4F03-8CB5-50D3E3D60DE0}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CarInsurance.Tests", "CarInsurance.Tests\CarInsurance.Tests.csproj", "{C2484D26-371B-4DE8-ABC5-9CE0C40377B8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B4B72544-BC3B-4F03-8CB5-50D3E3D60DE0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B4B72544-BC3B-4F03-8CB5-50D3E3D60DE0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B4B72544-BC3B-4F03-8CB5-50D3E3D60DE0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B4B72544-BC3B-4F03-8CB5-50D3E3D60DE0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C2484D26-371B-4DE8-ABC5-9CE0C40377B8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C2484D26-371B-4DE8-ABC5-9CE0C40377B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C2484D26-371B-4DE8-ABC5-9CE0C40377B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C2484D26-371B-4DE8-ABC5-9CE0C40377B8}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8276DCD3-745F-4521-88E1-9CB39EC2E2DE}
+	EndGlobalSection
+EndGlobal
