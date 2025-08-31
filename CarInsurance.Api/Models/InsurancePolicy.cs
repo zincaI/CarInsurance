@@ -10,4 +10,5 @@ public class InsurancePolicy
     public string? Provider { get; set; }
     public DateOnly StartDate { get; set; }
     public DateOnly EndDate { get; set; }
+    public bool IsExpirationLogged { get; set; } = false;
 }

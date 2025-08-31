@@ -11,6 +11,7 @@ builder.Services.AddDbContext<AppDbContext>(opt =>
 });
 
 builder.Services.AddScoped<ICarExistsValidator, CarExistsValidator>();
+builder.Services.AddHostedService<PolicyExpirationChecker>();
 
 builder.Services.AddScoped<CarService>();
 
