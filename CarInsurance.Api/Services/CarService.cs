@@ -28,7 +28,7 @@ public class CarService(AppDbContext db, ICarExistsValidator carExistsValidator)
         return await _db.Policies.AnyAsync(p =>
             p.CarId == carId &&
             p.StartDate <= date &&
-            (p.EndDate == null || p.EndDate >= date)
+            p.EndDate >= date
         );
     }
 
