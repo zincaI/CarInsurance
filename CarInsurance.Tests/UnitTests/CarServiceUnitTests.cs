@@ -1,12 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+
 using Xunit;
 using Moq;
 using Microsoft.EntityFrameworkCore;
 using CarInsurance.Api.Data;
-using CarInsurance.Api.Dtos;
 using CarInsurance.Api.Models;
 using CarInsurance.Api.Services;
 using CarInsurance.Api.Validators;
@@ -43,7 +39,7 @@ namespace CarInsurance.Tests.UnitTests
 
             var result = await service.IsInsuranceValidAsync(carId, new DateOnly(2024, 6, 1));
 
-            Assert.True(result);
+            Xunit.Assert.True(result);
         }
 
         [Fact]
@@ -60,7 +56,7 @@ namespace CarInsurance.Tests.UnitTests
 
             var result = await service.IsInsuranceValidAsync(carId, policyEndDate);
 
-            Assert.True(result);
+            Xunit.Assert.True(result);
         }
 
         [Fact]
@@ -77,7 +73,7 @@ namespace CarInsurance.Tests.UnitTests
 
             var result = await service.IsInsuranceValidAsync(carId, policyEndDate.AddDays(1));
 
-            Assert.False(result);
+            Xunit.Assert.False(result);
         }
 
         [Fact]
@@ -95,9 +91,9 @@ namespace CarInsurance.Tests.UnitTests
 
             var history = await service.GetCarHistoryAsync(carId);
 
-            Assert.Equal(2, history.Count);
-            Assert.Equal("Policy", history[0].Type);
-            Assert.Equal("Claim", history[1].Type);
+            Xunit.Assert.Equal(2, history.Count);
+            Xunit.Assert.Equal("Policy", history[0].Type);
+            Xunit.Assert.Equal("Claim", history[1].Type);
         }
 
         [Fact]
@@ -112,7 +108,7 @@ namespace CarInsurance.Tests.UnitTests
 
             var history = await service.GetCarHistoryAsync(carId);
 
-            Assert.Empty(history);
+            Xunit.Assert.Empty(history);
         }
 
         [Fact]
@@ -127,9 +123,9 @@ namespace CarInsurance.Tests.UnitTests
             var service = CreateServiceWithValidator(dbContext);
             var history = await service.GetCarHistoryAsync(carId);
 
-            Assert.Single(history);
-            Assert.Equal("Policy", history.First().Type);
-            Assert.NotNull(history.First().Description);
+            Xunit.Assert.Single(history);
+            Xunit.Assert.Equal("Policy", history.First().Type);
+            Xunit.Assert.NotNull(history.First().Description);
         }
 
         [Fact]
@@ -147,8 +143,8 @@ namespace CarInsurance.Tests.UnitTests
 
             var result = await service.RegisterClaimAsync(carId, claimDate, "Minor fender bender", 1500);
 
-            Assert.True(result);
-            Assert.Single(dbContext.Claims.Where(c => c.PolicyId == policyId));
+            Xunit.Assert.True(result);
+            Xunit.Assert.Single(dbContext.Claims.Where(c => c.PolicyId == policyId));
         }
 
         [Fact]
@@ -163,7 +159,7 @@ namespace CarInsurance.Tests.UnitTests
             var service = CreateServiceWithValidator(dbContext);
             var claimDate = new DateOnly(2024, 6, 15);
 
-            await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            await Xunit.Assert.ThrowsAsync<InvalidOperationException>(() =>
                 service.RegisterClaimAsync(carId, claimDate, "Claim on expired policy", 1000)
             );
         }
@@ -178,7 +174,7 @@ namespace CarInsurance.Tests.UnitTests
             mockValidator.Setup(v => v.IsValid(It.IsAny<long>())).ReturnsAsync(false);
             var service = new CarService(dbContext, mockValidator.Object);
 
-            await Assert.ThrowsAsync<KeyNotFoundException>(() =>
+            await Xunit.Assert.ThrowsAsync<KeyNotFoundException>(() =>
                 service.IsInsuranceValidAsync(nonExistentCarId, new DateOnly(2024, 6, 1))
             );
         }
@@ -193,7 +189,7 @@ namespace CarInsurance.Tests.UnitTests
             mockValidator.Setup(v => v.IsValid(It.IsAny<long>())).ReturnsAsync(false);
             var service = new CarService(dbContext, mockValidator.Object);
 
-            await Assert.ThrowsAsync<KeyNotFoundException>(() =>
+            await Xunit.Assert.ThrowsAsync<KeyNotFoundException>(() =>
                 service.GetCarHistoryAsync(nonExistentCarId)
             );
         }
@@ -208,7 +204,7 @@ namespace CarInsurance.Tests.UnitTests
             mockValidator.Setup(v => v.IsValid(It.IsAny<long>())).ReturnsAsync(false);
             var service = new CarService(dbContext, mockValidator.Object);
 
-            await Assert.ThrowsAsync<KeyNotFoundException>(() =>
+            await Xunit.Assert.ThrowsAsync<KeyNotFoundException>(() =>
                 service.RegisterClaimAsync(nonExistentCarId, new DateOnly(2024, 6, 1), "Non-existent car claim", 1000)
             );
         }
@@ -250,10 +246,10 @@ namespace CarInsurance.Tests.UnitTests
 
             var result = await service.ListCarsAsync();
 
-            Assert.Equal(2, result.Count());
+            Xunit.Assert.Equal(2, result.Count());
             var carA = result.First(c => c.Id == 1L);
-            Assert.Equal("Ford", carA.Make);
-            Assert.Equal("John Smith", carA.OwnerName);
+            Xunit.Assert.Equal("Ford", carA.Make);
+            Xunit.Assert.Equal("John Smith", carA.OwnerName);
         }
     }
 }
